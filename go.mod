@@ -1,4 +1,4 @@
-module githbu.com/miaogaolin/condition
+module github.com/miaogaolin/condition
 
 go 1.18
 
