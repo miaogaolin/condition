@@ -16,11 +16,11 @@ func TestValidate(t *testing.T) {
 		wantErr bool
 	}{
 		{"==", args{map[string]interface{}{"col1": 1},
-			`{col1} == 1}`}, true, false},
+			`{col1} == 1`}, true, false},
 		{"!=", args{map[string]interface{}{"col2": "aaa"},
-			`{col2} != "aaa"}`}, false, false},
+			`{col2} != "aaa"`}, false, false},
 		{"in", args{map[string]interface{}{"col2": "aa"},
-			`{col2} in ["aa", "bb"]}`}, true, false},
+			`{col2} in ["aa", "bb"]`}, true, false},
 		{"not in", args{map[string]interface{}{"col2": "cc"},
 			`{col2} not in ["aa", "bb"]`}, true, false},
 		{"=~", args{map[string]interface{}{"col2": "aaaccaaa"},

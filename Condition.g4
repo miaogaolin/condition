@@ -25,7 +25,7 @@ NOTIN: NOT ' '? IN;
 NOT: N O T;
 AND: A N D;
 OR: O R;
-COL: ID DEC?;
+COL:  [a-zA-Z_]+[a-zA-Z_0-9]*;
 
 ID: [a-zA-Z]+;
 COMMENT: '//' ~[\r\n]* -> skip;
