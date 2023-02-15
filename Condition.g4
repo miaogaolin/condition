@@ -1,18 +1,18 @@
 grammar Condition;
 
 expr:
-	expr op = (AND | OR) expr									# AndOr
-	| conditionKey op = (IN | NOTIN) array						# GetArrayExpr
-	| conditionKey op = (LIKE | NOTLIKE | EQ | NOTEQ) STRING	# GetStringExpr
-	| conditionKey op = (EQ | GT | LT | NOTEQ) number			# GetNumExpr
-	| '(' expr ')'												# Parent;
+	expr op = (AND | OR) expr										# AndOr
+	| conditionKey op = (IN | NOTIN) array							# GetArrayExpr
+	| conditionKey op = (LIKE | NOTLIKE | EQ | NOTEQ) STRING		# GetStringExpr
+	| conditionKey op = (GTEQ | LTEQ | EQ | GT | LT | NOTEQ) number	# GetNumExpr
+	| '(' expr ')'													# Parent;
 
 conditionKey: '{' COL '}';
 
 array:
 	'[' STRING (',' STRING)* ']' // 字符串数组
 	| '[' number (',' number)* ']'; // 数字数组
-number: FLOAT | DEC;
+number: '-' FLOAT | '-' DEC | FLOAT | DEC;
 
 LIKE: '=~';
 NOTLIKE: '!~';
@@ -20,12 +20,14 @@ EQ: '==';
 NOTEQ: '!=';
 GT: '>';
 LT: '<';
+GTEQ: '>=';
+LTEQ: '<=';
 IN: I N;
 NOTIN: NOT ' '? IN;
 NOT: N O T;
 AND: A N D;
 OR: O R;
-COL:  [a-zA-Z_]+[a-zA-Z_0-9]*;
+COL: [a-zA-Z_]+ [a-zA-Z_0-9]*;
 
 ID: [a-zA-Z]+;
 COMMENT: '//' ~[\r\n]* -> skip;

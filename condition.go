@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/antlr/antlr4/runtime/Go/antlr/v4"
 	"github.com/pkg/errors"
 )
 
@@ -105,6 +105,14 @@ func (p *condition) VisitGetNumExpr(ctx *GetNumExprContext) interface{} {
 		}
 	case "!=":
 		if colVal != data {
+			return true
+		}
+	case ">=":
+		if colVal >= data {
+			return true
+		}
+	case "<=":
+		if colVal <= data {
 			return true
 		}
 	}
