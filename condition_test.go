@@ -15,6 +15,8 @@ func TestValidate(t *testing.T) {
 		want    bool
 		wantErr bool
 	}{
+		{"==", args{map[string]interface{}{"$col1": 1},
+			`{$col1} == 1`}, true, false},
 		{"==", args{map[string]interface{}{"col1": 1},
 			`{col1} == 1`}, true, false},
 		{"!=", args{map[string]interface{}{"col2": "aaa"},
