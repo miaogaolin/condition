@@ -17,7 +17,13 @@ func main() {
 		"col2": "hello world",
 		"col3": "male",
 	}
-	res, err := condition.Validate(data, `({col1}==1 and {col2} =~ "world") or {col3} in ["male"]`)
+	
+	c, err := condition.New(`({col1}==1 and {col2} =~ "world") or {col3} in ["male"]`)
+	if err != nil {
+		panic(err)
+	}
+
+	res, err := c.Validate(data)
 	if err != nil {
 		panic(err)
 	}

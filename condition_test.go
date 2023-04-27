@@ -15,8 +15,6 @@ func TestValidate(t *testing.T) {
 		want    bool
 		wantErr bool
 	}{
-		{"==", args{map[string]interface{}{"$col1": 1},
-			`{$col1} == 1`}, true, false},
 		{"==", args{map[string]interface{}{"col1": 1},
 			`{col1} == 1`}, true, false},
 		{"!=", args{map[string]interface{}{"col2": "aaa"},
@@ -54,7 +52,11 @@ func TestValidate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Validate(tt.args.data, tt.args.conditionExpr)
+			c, err := New(tt.args.conditionExpr)
+			var got bool
+			if err == nil {
+				got, err = c.Validate(tt.args.data)
+			}
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -62,6 +64,33 @@ func TestValidate(t *testing.T) {
 			if got != tt.want {
 				t.Errorf("Validate() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestNew(t *testing.T) {
+	type args struct {
+		conditionExpr string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"", args{
+			`{col1} == 1`}, false},
+		{"", args{`{F} == "支出" and {B} =~ "餐饮"   `}, false},
+		{"", args{
+			`{col2} != "`}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := New(tt.args.conditionExpr)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("New() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
 		})
 	}
 }

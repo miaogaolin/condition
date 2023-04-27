@@ -15,14 +15,11 @@ var (
 	ErrNotFoundCol = errors.New("not field")
 )
 
-type condition struct {
-	BaseConditionVisitor
-
-	data map[string]interface{}
-	Err  error
+type Condition struct {
+	tree IExprContext
 }
 
-func Validate(data map[string]interface{}, conditionExpr string) (bool, error) {
+func New(conditionExpr string) (*Condition, error) {
 	conError := NewConditionError()
 	// 新家一个 CharStream
 	input := antlr.NewInputStream(conditionExpr)
@@ -41,11 +38,6 @@ func Validate(data map[string]interface{}, conditionExpr string) (bool, error) {
 	parser.AddErrorListener(conError)
 
 	tree := parser.Expr()
-
-	visitor := new(condition)
-	visitor.data = data
-	res := visitor.Visit(tree)
-
 	var err error
 	// parser error
 	for _, v := range conError.Errors {
@@ -57,13 +49,28 @@ func Validate(data map[string]interface{}, conditionExpr string) (bool, error) {
 	}
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
+	return &Condition{tree: tree}, nil
+}
+
+func (c *Condition) Validate(data map[string]interface{}) (bool, error) {
+	visitor := new(condition)
+	visitor.data = data
+	res := visitor.Visit(c.tree)
+
 	if visitor.Err != nil {
 		return false, visitor.Err
 	}
 
 	return res.(bool), nil
+}
+
+type condition struct {
+	BaseConditionVisitor
+
+	data map[string]interface{}
+	Err  error
 }
 
 func (p *condition) Visit(tree antlr.ParseTree) interface{} {
